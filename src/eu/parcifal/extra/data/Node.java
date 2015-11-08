@@ -14,14 +14,26 @@ public interface Node {
 	 * 
 	 * @return The height of the current node.
 	 */
-	public int height();
+	public default int height() {
+		int height = 0;
+
+		for (Node child : this.getChildren()) {
+			if (child.height() > height) {
+				height = child.height();
+			}
+		}
+
+		return height;
+	}
 
 	/**
 	 * Return the degree of the current node, i.e. the amount of child nodes.
 	 * 
 	 * @return The degree of the current node.
 	 */
-	public int degree();
+	public default int degree() {
+		return this.getChildren().size();
+	}
 
 	/**
 	 * Return whether or not the current node is a leaf, i.e. does not have a
@@ -29,7 +41,9 @@ public interface Node {
 	 * 
 	 * @return True if the current node is a leaf, otherwise false.
 	 */
-	public boolean isLeaf();
+	public default boolean isLeaf() {
+		return this.getChildren().isEmpty();
+	}
 
 	/**
 	 * Return a collection of child nodes of the current node.
