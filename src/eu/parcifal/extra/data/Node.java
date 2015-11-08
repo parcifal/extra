@@ -2,6 +2,11 @@ package eu.parcifal.extra.data;
 
 import java.util.Collection;
 
+/**
+ * Connected to other nodes (children) within a tree shaped structure.
+ * 
+ * @author Michaël van de Weerd
+ */
 public interface Node {
 	/**
 	 * Return the height of the current node, i.e. the largest amount of node
