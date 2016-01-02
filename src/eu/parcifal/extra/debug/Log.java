@@ -2,7 +2,13 @@ package eu.parcifal.extra.debug;
 
 import java.time.LocalDateTime;
 
-public class Log extends Output {
+/**
+ * Formats a time, source and content in a readable way, adds a label and can be
+ * printed to the console.
+ * 
+ * @author Michaël van de Weerd
+ */
+public class Log extends Printable {
 	/**
 	 * The format in which a log prints its content.
 	 */
@@ -31,7 +37,7 @@ public class Log extends Output {
 	}
 
 	@Override
-	public Output clone() {
+	public Printable clone() {
 		return new Log(this.time, this.source, this.content);
 	}
 

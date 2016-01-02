@@ -3,34 +3,40 @@ package eu.parcifal.extra.debug;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * A simple console used to format output in a readable way.
+ * 
+ * @author Michaël van de Weerd
+ */
 public class Console {
-	private static Collection<Output> output = new ArrayList<Output>();
+	private static Collection<Printable> output = new ArrayList<Printable>();
 
 	/**
 	 * Return a clone of the output that has been passed through the console.
 	 * 
 	 * @return A clone of the output that has been passed through the console.
 	 */
-	public Collection<Output> getOutput() {
-		Collection<Output> output = new ArrayList<Output>();
+	public Collection<Printable> getOutput() {
+		Collection<Printable> printables = new ArrayList<Printable>();
 
-		for (Output o : Console.output)
-			output.add(o.clone());
+		for (Printable o : Console.output) {
+			printables.add(o.clone());
+		}
 
-		return output;
+		return printables;
 	}
 
 	public static void log(Object source, Object content) {
-		out(new Log(source.getClass(), content));
+		print(new Log(source.getClass(), content));
 	}
 
 	public static void warn(Object source, Object content, Warning.Level level) {
-		out(new Warning(source.getClass(), content, level));
+		print(new Warning(source.getClass(), content, level));
 	}
 
-	private static void out(Output output) {
-		output.print();
+	private static void print(Printable printable) {
+		printable.print();
 
-		Console.output.add(output);
+		Console.output.add(printable);
 	}
 }

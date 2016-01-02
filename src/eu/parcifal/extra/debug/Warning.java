@@ -2,7 +2,13 @@ package eu.parcifal.extra.debug;
 
 import java.time.LocalDateTime;
 
-public class Warning extends Output {
+/**
+ * Formats a time, source, content and level in a readable way, adds a label and
+ * can be printed to the console.
+ * 
+ * @author Michaël van de Weerd
+ */
+public class Warning extends Printable {
 	/**
 	 * The format in which a warning prints its content.
 	 */
@@ -46,7 +52,7 @@ public class Warning extends Output {
 	}
 
 	@Override
-	public Output clone() {
+	public Printable clone() {
 		return new Warning(this.time, this.source, this.content, this.level);
 	}
 
