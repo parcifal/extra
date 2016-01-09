@@ -1,7 +1,7 @@
 package eu.parcifal.extra.thread;
 
-import eu.parcifal.extra.debug.Console;
-import eu.parcifal.extra.debug.Warning;
+import eu.parcifal.extra.print.Console;
+import eu.parcifal.extra.print.Warning;
 
 /**
  * A partial implementation of the runnable interface, providing three methods
@@ -174,7 +174,7 @@ public abstract class Runner implements Runnable {
 				}
 			}
 		} catch (InterruptedException exception) {
-			Console.warn(this, String.format(WARNING_INTERRUPTED, exception.getCause()), Warning.Level.SEV);
+			Console.warn(this, String.format(WARNING_INTERRUPTED, exception.getCause()), Warning.Level.FATAL);
 
 			this.stop();
 		} finally {
