@@ -1,4 +1,4 @@
-package eu.parcifal.extra.logic;
+package eu.parcifal.extra.throwing;
 
 /**
  * Thrown by a router when a path cannot be matched to a route.

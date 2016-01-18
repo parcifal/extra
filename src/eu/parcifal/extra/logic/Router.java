@@ -1,5 +1,7 @@
 package eu.parcifal.extra.logic;
 
+import eu.parcifal.extra.throwing.RouteNotFoundException;
+
 /**
  * Contains and handles one or more routes.
  * 
