@@ -15,11 +15,6 @@ public abstract class Runner implements Runnable {
 	 * The default length of the pause period.
 	 */
 	private static final long DEFAULT_PAUSE_PERIOD = 25;
-	/**
-	 * The warning message for when the runner has been interrupted while
-	 * running.
-	 */
-	private static final String WARNING_INTERRUPTED = "the runner has been interrupted by %1$s and will stop running";
 
 	/**
 	 * The pause period of the current runner.
@@ -47,12 +42,14 @@ public abstract class Runner implements Runnable {
 	private int actCycle = 0;
 
 	/**
-	 * Set the pause period of the current runner to the specified length in milliseconds.
+	 * Set the pause period of the current runner to the specified length in
+	 * milliseconds.
 	 * 
 	 * @param length
-	 *            The new length of the pause period of the current runner in milliseconds.
+	 *            The new length of the pause period of the current runner in
+	 *            milliseconds.
 	 */
-	public void setPausePeriod(long length) {
+	public final void pausePeriod(long length) {
 		this.pausePeriod = length;
 	}
 
@@ -61,7 +58,7 @@ public abstract class Runner implements Runnable {
 	 * 
 	 * @return True if the current runner is paused, otherwise false.
 	 */
-	public boolean paused() {
+	public final boolean paused() {
 		return this.paused;
 	}
 
@@ -70,7 +67,7 @@ public abstract class Runner implements Runnable {
 	 * 
 	 * @return True if the current runner is running, otherwise false.
 	 */
-	public boolean running() {
+	public final boolean running() {
 		return this.running;
 	}
 
@@ -79,7 +76,7 @@ public abstract class Runner implements Runnable {
 	 * 
 	 * @return The amount of cycles of the current runner.
 	 */
-	public int runCycle() {
+	public final int runCycle() {
 		return this.runCycle;
 	}
 
@@ -88,7 +85,7 @@ public abstract class Runner implements Runnable {
 	 * 
 	 * @return The amount of times the act method has been executed.
 	 */
-	public int actCycle() {
+	public final int actCycle() {
 		return this.actCycle;
 	}
 
@@ -96,7 +93,7 @@ public abstract class Runner implements Runnable {
 	 * Pause executing the act method. Does nothing if the current runner is
 	 * already paused.
 	 */
-	public void pause() {
+	public final void pause() {
 		this.paused = true;
 	}
 
@@ -104,7 +101,7 @@ public abstract class Runner implements Runnable {
 	 * Resume executing the act method. Does nothing if the current runner is
 	 * not paused.
 	 */
-	public void resume() {
+	public final void resume() {
 		this.paused = false;
 	}
 
@@ -112,12 +109,12 @@ public abstract class Runner implements Runnable {
 	 * Permanently stop executing the act method. Does nothing if the current
 	 * runner is not running.
 	 */
-	public void stop() {
+	public final void stop() {
 		this.running = false;
 	}
 
 	@Override
-	public void run() {
+	public final void run() {
 		try {
 			this.running = true;
 
@@ -133,11 +130,13 @@ public abstract class Runner implements Runnable {
 				if (!this.paused) {
 					this.act();
 				} else {
-					this.wait(pausePeriod);
+					try {
+						Thread.sleep(pausePeriod);
+					} catch (InterruptedException ie) {
+						Console.warn(Level.HIGH, ie.getMessage());
+					}
 				}
 			}
-		} catch (InterruptedException e) {
-			Console.warn(Level.FATAL, WARNING_INTERRUPTED);
 		} finally {
 			try {
 				this.finalise();
@@ -155,8 +154,7 @@ public abstract class Runner implements Runnable {
 	}
 
 	/**
-	 * Perform actions during the run of the current runner at an interval of
-	 * the length of the act period.
+	 * Perform actions during the run of the current runner.
 	 */
 	abstract protected void act();
 
