@@ -1,11 +1,12 @@
 package eu.parcifal.extra.thread;
 
 import eu.parcifal.extra.print.Console;
-import eu.parcifal.extra.print.Warning;
+import eu.parcifal.extra.print.output.Warning.Level;
+import eu.parcifal.extra.throwing.MethodNotImplementedException;
 
 /**
  * A partial implementation of the runnable interface, providing three methods
- * to initiate, act every cycle and finish.
+ * to initialise, act every cycle and finalise.
  * 
  * @author Michaël van de Weerd
  */
@@ -147,7 +148,11 @@ public abstract class Runner implements Runnable {
 		try {
 			this.running = true;
 
-			this.initiate();
+			try {
+				this.initialise();
+			} catch (MethodNotImplementedException mnie) {
+				Console.debug(mnie.getMessage());
+			}
 
 			// used during this run for the calculation of the remaining time of
 			// the act period
@@ -170,23 +175,27 @@ public abstract class Runner implements Runnable {
 				if (sleep >= 0) {
 					Thread.sleep(sleep);
 				} else {
-					Console.warn(this, String.format(WARNING_OVERTIME, -sleep, this.actPeriod), Warning.Level.HIGH);
+					Console.warn(Level.HIGH, WARNING_OVERTIME, -sleep, this.actPeriod);
 				}
 			}
 		} catch (InterruptedException exception) {
-			Console.warn(this, String.format(WARNING_INTERRUPTED, exception.getCause()), Warning.Level.FATAL);
+			Console.warn(Level.FATAL, WARNING_INTERRUPTED, exception.getCause());
 
 			this.stop();
 		} finally {
-			this.finish();
+			try {
+				this.finalise();
+			} catch (MethodNotImplementedException mnie) {
+				Console.debug(mnie);
+			}
 		}
 	}
 
 	/**
 	 * Perform actions once at the beginning of the run of the current runner.
 	 */
-	protected void initiate() {
-		// implementation optional
+	protected void initialise() {
+		throw new MethodNotImplementedException();
 	}
 
 	/**
@@ -198,8 +207,8 @@ public abstract class Runner implements Runnable {
 	/**
 	 * Perform actions once at the end of the run of the current runner.
 	 */
-	protected void finish() {
-		// implementation optional
+	protected void finalise() {
+		throw new MethodNotImplementedException();
 	}
 
 }

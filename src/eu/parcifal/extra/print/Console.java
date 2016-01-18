@@ -3,6 +3,11 @@ package eu.parcifal.extra.print;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import eu.parcifal.extra.print.output.Debug;
+import eu.parcifal.extra.print.output.Log;
+import eu.parcifal.extra.print.output.Printable;
+import eu.parcifal.extra.print.output.Warning;
+
 public class Console {
 	private static Collection<Printable> output = new ArrayList<Printable>();
 
@@ -18,28 +23,28 @@ public class Console {
 		return printables;
 	}
 
-	public static void log(Object source, Object content) {
-		Log log = new Log(source.getClass(), content, false);
-
-		print(log);
+	public static void log(Object content) {
+		print(new Log(content));
 	}
 
-	public static void warn(Object source, Object content, Warning.Level level) {
-		Warning warning = new Warning(source.getClass(), content, level, false);
-
-		print(warning);
+	public static void log(String content, Object... args) {
+		print(new Log(String.format(content, args)));
 	}
 
-	public static void debugLog(Object source, Object content) {
-		Log log = new Log(source.getClass(), content, true);
-
-		print(log);
+	public static void debug(Object content) {
+		print(new Debug(content));
 	}
 
-	public static void debugWarn(Object source, Object content, Warning.Level level) {
-		Warning warning = new Warning(source.getClass(), content, level, true);
+	public static void debug(String content, Object... args) {
+		print(new Debug(String.format(content, args)));
+	}
 
-		print(warning);
+	public static void warn(Warning.Level level, Object content) {
+		print(new Warning(content, level));
+	}
+
+	public static void warn(Warning.Level level, Object content, Object... args) {
+		print(new Warning(String.format(content.toString(), args), level));
 	}
 
 	private static void print(Printable printable) {
@@ -47,8 +52,8 @@ public class Console {
 
 		printable.print(Console.debug);
 	}
-	
-	public static void debug(boolean debug) {
+
+	public static void printDebug(boolean debug) {
 		Console.debug = debug;
 	}
 }

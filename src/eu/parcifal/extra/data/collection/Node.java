@@ -1,4 +1,4 @@
-package eu.parcifal.extra.data;
+package eu.parcifal.extra.data.collection;
 
 import java.util.Collection;
 
