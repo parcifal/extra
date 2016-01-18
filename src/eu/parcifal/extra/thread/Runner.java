@@ -1,9 +1,13 @@
 package eu.parcifal.extra.thread;
 
-import eu.parcifal.extra.debug.Console;
-import eu.parcifal.extra.debug.Warning;
+import eu.parcifal.extra.print.Console;
+import eu.parcifal.extra.print.output.Warning.Level;
+import eu.parcifal.extra.throwing.MethodNotImplementedException;
 
 /**
+ * A partial implementation of the runnable interface, providing three methods
+ * to initialise, act every cycle and finalise.
+ * 
  * @author Michaël van de Weerd
  */
 public abstract class Runner implements Runnable {
@@ -21,7 +25,7 @@ public abstract class Runner implements Runnable {
 	 * The warning message for when the execution time of the act method is
 	 * greater than the act period.
 	 */
-	private static final String WARNING_OVERTIME = "the executiontime of method act() took %1$sms longer than the current act period of %2$sms, consider raising its value using setActPeriod(long)";
+	private static final String WARNING_OVERTIME = "the execution time of method act() took %1$sms longer than the current act period of %2$sms, consider raising its value using setActPeriod(long)";
 
 	/**
 	 * The warning message for when the runner has been interrupted while
@@ -48,6 +52,11 @@ public abstract class Runner implements Runnable {
 	 * Indicates whether or not the current runner is paused.
 	 */
 	private boolean paused = false;
+
+	/**
+	 * The amount of cycles of the current runner.
+	 */
+	private int runCycle = 0;
 
 	/**
 	 * The amount of times the act method has been executed.
@@ -93,6 +102,15 @@ public abstract class Runner implements Runnable {
 	}
 
 	/**
+	 * Return the amount of cycles of the current runner.
+	 * 
+	 * @return The amount of cycles of the current runner.
+	 */
+	public int runCycle() {
+		return this.runCycle;
+	}
+
+	/**
 	 * Return the amount of times the act method has been executed.
 	 * 
 	 * @return The amount of times the act method has been executed.
@@ -130,56 +148,67 @@ public abstract class Runner implements Runnable {
 		try {
 			this.running = true;
 
-			this.initiate();
+			try {
+				this.initialise();
+			} catch (MethodNotImplementedException mnie) {
+				Console.debug(mnie.getMessage());
+			}
 
 			// used during this run for the calculation of the remaining time of
 			// the act period
 			long start, sleep;
 
 			while (this.running) {
-				if (!this.paused) {
-					start = System.currentTimeMillis();
+				start = System.currentTimeMillis();
 
+				this.runCycle++;
+
+				if (!this.paused) {
 					this.act();
 					this.actCycle++;
 
 					sleep = actPeriod - (System.currentTimeMillis() - start);
-				} else
-					sleep = pausePeriod;
+				} else {
+					sleep = pausePeriod - (System.currentTimeMillis() - start);
+				}
 
-				if (sleep >= 0)
+				if (sleep >= 0) {
 					Thread.sleep(sleep);
-				else
-					Console.warn(this, String.format(WARNING_OVERTIME, -sleep, this.actPeriod), Warning.Level.HIGH);
+				} else {
+					Console.warn(Level.HIGH, WARNING_OVERTIME, -sleep, this.actPeriod);
+				}
 			}
 		} catch (InterruptedException exception) {
-			Console.warn(this, String.format(WARNING_INTERRUPTED, exception.getCause()), Warning.Level.SEV);
+			Console.warn(Level.FATAL, WARNING_INTERRUPTED, exception.getCause());
 
 			this.stop();
 		} finally {
-			this.finish();
+			try {
+				this.finalise();
+			} catch (MethodNotImplementedException mnie) {
+				Console.debug(mnie);
+			}
 		}
 	}
 
 	/**
 	 * Perform actions once at the beginning of the run of the current runner.
 	 */
-	protected void initiate() {
-		// implementation optional
+	protected void initialise() {
+		throw new MethodNotImplementedException();
 	}
 
 	/**
 	 * Perform actions during the run of the current runner at an interval of
 	 * the length of the act period.
-	 * @throws InterruptedException 
 	 */
-	abstract protected void act() throws InterruptedException;
+	abstract protected void act();
 
 	/**
 	 * Perform actions once at the end of the run of the current runner.
 	 */
-	protected void finish() {
-		// implementation optional
+	protected void finalise() {
+		throw new MethodNotImplementedException();
 	}
 
 }
