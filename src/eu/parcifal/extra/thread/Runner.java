@@ -47,10 +47,10 @@ public abstract class Runner implements Runnable {
 	private int actCycle = 0;
 
 	/**
-	 * Set the pause period of the current runner to the specified length.
+	 * Set the pause period of the current runner to the specified length in milliseconds.
 	 * 
 	 * @param length
-	 *            The new length of the pause period of the current runner.
+	 *            The new length of the pause period of the current runner in milliseconds.
 	 */
 	public void setPausePeriod(long length) {
 		this.pausePeriod = length;
@@ -61,7 +61,7 @@ public abstract class Runner implements Runnable {
 	 * 
 	 * @return True if the current runner is paused, otherwise false.
 	 */
-	public boolean isPaused() {
+	public boolean paused() {
 		return this.paused;
 	}
 
@@ -70,7 +70,7 @@ public abstract class Runner implements Runnable {
 	 * 
 	 * @return True if the current runner is running, otherwise false.
 	 */
-	public boolean isRunning() {
+	public boolean running() {
 		return this.running;
 	}
 
