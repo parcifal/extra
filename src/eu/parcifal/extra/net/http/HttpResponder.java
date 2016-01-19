@@ -1,15 +1,12 @@
 package eu.parcifal.extra.net.http;
 
 import eu.parcifal.extra.net.Responder;
-import eu.parcifal.extra.print.Console;
 
 public class HttpResponder extends Responder {
 
 	@Override
-	protected byte[] response(String request) {
-		Console.log(request);
-
-		return "200 OK".getBytes();
+	protected byte[] response(byte[] request) {
+		return "HTTP/1.0 500 Internal Server Error".getBytes();
 	}
 
 }

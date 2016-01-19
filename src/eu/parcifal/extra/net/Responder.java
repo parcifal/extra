@@ -1,8 +1,6 @@
 package eu.parcifal.extra.net;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 
 import eu.parcifal.extra.logic.Poolable;
@@ -56,15 +54,19 @@ public abstract class Responder extends Poolable implements Runnable {
 
 			if (!this.paused) {
 				try {
-					BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+					byte[] request = new byte[8192];
 
-					String request = "", line;
+					client.getInputStream().read(request);
 
-					while ((line = in.readLine()) != null) {
-						request = request + line;
-					}
+					byte[] response = this.response(request);
 
-					client.getOutputStream().write(this.response(request));
+					client.getOutputStream().write(response);
+				} catch (IOException ioe) {
+					Console.warn(Level.HIGH, ioe.getMessage());
+				}
+
+				try {
+					this.client.close();
 				} catch (IOException ioe) {
 					Console.warn(Level.HIGH, ioe.getMessage());
 				}
@@ -80,12 +82,6 @@ public abstract class Responder extends Poolable implements Runnable {
 				}
 			}
 		}
-
-		try {
-			this.client.close();
-		} catch (IOException ioe) {
-			Console.warn(Level.HIGH, ioe.getMessage());
-		}
 	}
 
 	@Override
@@ -98,6 +94,6 @@ public abstract class Responder extends Poolable implements Runnable {
 		}
 	}
 
-	protected abstract byte[] response(String request);
+	protected abstract byte[] response(byte[] request);
 
 }
