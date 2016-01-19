@@ -5,14 +5,14 @@ import java.net.Socket;
 import eu.parcifal.extra.logic.Pool;
 import eu.parcifal.extra.net.Responder;
 
-public class HttpResponderPool extends Pool<Responder> {
+public class HTTPResponderPool extends Pool<Responder> {
 
 	@Override
 	protected Responder instantiate(Object... args) {
 		if (!(args[0] instanceof Socket)) {
 			throw new IllegalArgumentException();
 		} else {
-			Responder responder = new HttpResponder();
+			Responder responder = new HTTPResponder();
 
 			responder.observe(this);
 			responder.initialise((Socket) args[0]);

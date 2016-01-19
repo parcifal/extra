@@ -4,17 +4,17 @@ import eu.parcifal.extra.logic.Pool;
 import eu.parcifal.extra.net.PortListener;
 import eu.parcifal.extra.net.Responder;
 
-public class HttpListener extends PortListener {
+public class HTTPListener extends PortListener {
 
-	private static final HttpResponderPool POOL = new HttpResponderPool();
+	private static final HTTPResponderPool POOL = new HTTPResponderPool();
 
 	private static final int DEFAULT_PORT = 80;
 
-	public HttpListener(int port) {
+	public HTTPListener(int port) {
 		super(port);
 	}
 
-	public HttpListener() {
+	public HTTPListener() {
 		super(DEFAULT_PORT);
 	}
 
