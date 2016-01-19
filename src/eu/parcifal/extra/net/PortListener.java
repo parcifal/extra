@@ -2,15 +2,20 @@ package eu.parcifal.extra.net;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
+import eu.parcifal.extra.logic.Pool;
 import eu.parcifal.extra.print.Console;
 import eu.parcifal.extra.print.output.Warning.Level;
 import eu.parcifal.extra.thread.Runner;
 
+/**
+ * Listens for incoming connection on a port and assigns each connected client
+ * to a responder.
+ * 
+ * @author Michaël van de Weerd
+ */
 public abstract class PortListener extends Runner {
-
-	private final static String WARNING_SERVER_SOCKET = "the port listener could not open a socket at port %1s";
+	private static final String DEBUG_LISTEN_INIT = "listening for requests on port %1s";
 
 	/**
 	 * The port at which the current port listener is listening.
@@ -34,27 +39,29 @@ public abstract class PortListener extends Runner {
 	}
 
 	@Override
-	protected void initialise() {
+	protected final void initialise() {
 		try {
 			this.socket = new ServerSocket(this.port);
+
+			Console.debug(DEBUG_LISTEN_INIT, this.port);
 		} catch (IOException ioe) {
-			Console.warn(Level.FATAL, WARNING_SERVER_SOCKET, this.port);
+			Console.warn(Level.FATAL, ioe.getMessage());
 
 			this.stop();
 		}
 	}
 
 	@Override
-	protected void act() {
+	protected final void act() {
 		try {
-			this.handle(this.socket.accept());
+			this.pool().get(this.socket.accept());
 		} catch (IOException ioe) {
 			Console.warn(Level.HIGH, ioe.getMessage());
 		}
 	}
 
 	@Override
-	protected void finalise() {
+	protected final void finalise() {
 		try {
 			this.socket.close();
 		} catch (IOException ioe) {
@@ -62,12 +69,6 @@ public abstract class PortListener extends Runner {
 		}
 	}
 
-	/**
-	 * Handle a connection made by a client.
-	 * 
-	 * @param client
-	 *            The socket used to communicate with the client.
-	 */
-	abstract protected void handle(Socket client);
+	protected abstract Pool<Responder> pool();
 
 }

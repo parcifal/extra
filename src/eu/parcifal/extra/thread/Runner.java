@@ -115,34 +115,32 @@ public abstract class Runner implements Runnable {
 
 	@Override
 	public final void run() {
+		this.running = true;
+
 		try {
-			this.running = true;
+			this.initialise();
+		} catch (MethodNotImplementedException mnie) {
+			Console.debug(mnie.getMessage());
+		}
 
-			try {
-				this.initialise();
-			} catch (MethodNotImplementedException mnie) {
-				Console.debug(mnie.getMessage());
-			}
+		while (this.running) {
+			this.runCycle++;
 
-			while (this.running) {
-				this.runCycle++;
-
-				if (!this.paused) {
-					this.act();
-				} else {
-					try {
-						Thread.sleep(pausePeriod);
-					} catch (InterruptedException ie) {
-						Console.warn(Level.HIGH, ie.getMessage());
-					}
+			if (!this.paused) {
+				this.act();
+			} else {
+				try {
+					Thread.sleep(pausePeriod);
+				} catch (InterruptedException ie) {
+					Console.warn(Level.HIGH, ie.getMessage());
 				}
 			}
-		} finally {
-			try {
-				this.finalise();
-			} catch (MethodNotImplementedException mnie) {
-				Console.debug(mnie.getMessage());
-			}
+		}
+
+		try {
+			this.finalise();
+		} catch (MethodNotImplementedException mnie) {
+			Console.debug(mnie.getMessage());
 		}
 	}
 
