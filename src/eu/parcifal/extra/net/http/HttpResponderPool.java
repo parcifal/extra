@@ -14,6 +14,7 @@ public class HttpResponderPool extends Pool<Responder> {
 		} else {
 			Responder responder = new HttpResponder();
 
+			responder.observe(this);
 			responder.initialise((Socket) args[0]);
 
 			new Thread(responder).start();

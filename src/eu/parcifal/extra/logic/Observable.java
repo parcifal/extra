@@ -11,7 +11,7 @@ public abstract class Observable {
 		this.observers.add(observer);
 	}
 
-	protected final void notify(Object... args) {
+	protected final void notifyObservers(Object... args) {
 		for (Observer observer : this.observers) {
 			observer.notify(this, args);
 		}

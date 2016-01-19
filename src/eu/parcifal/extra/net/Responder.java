@@ -7,11 +7,12 @@ import eu.parcifal.extra.logic.Poolable;
 import eu.parcifal.extra.print.Console;
 import eu.parcifal.extra.print.output.Warning.Level;
 
+/**
+ * Provides a response to a request made via a socket.
+ * 
+ * @author Michaël van de Weerd
+ */
 public abstract class Responder extends Poolable implements Runnable {
-
-	private static final long DEFAULT_PAUSE_PERIOD = 25;
-
-	private long pausePeriod = DEFAULT_PAUSE_PERIOD;
 
 	private Socket client;
 
@@ -19,26 +20,12 @@ public abstract class Responder extends Poolable implements Runnable {
 
 	private boolean running = false;
 
-	private boolean paused = false;
-
-	public final boolean paused() {
-		return this.paused;
-	}
-
 	public final boolean running() {
 		return this.running;
 	}
 
 	public final int runCycle() {
 		return this.runCycle;
-	}
-
-	public final void pause() {
-		this.paused = true;
-	}
-
-	public final void resume() {
-		this.paused = false;
 	}
 
 	public final void stop() {
@@ -52,33 +39,33 @@ public abstract class Responder extends Poolable implements Runnable {
 		while (this.running) {
 			this.runCycle++;
 
-			if (!this.paused) {
-				try {
-					byte[] request = new byte[8192];
+			try {
+				byte[] request = new byte[8192];
 
-					client.getInputStream().read(request);
+				client.getInputStream().read(request);
 
-					byte[] response = this.response(request);
+				byte[] response = this.response(request);
 
-					client.getOutputStream().write(response);
-				} catch (IOException ioe) {
-					Console.warn(Level.HIGH, ioe.getMessage());
-				}
+				client.getOutputStream().write(response);
+			} catch (IOException ioe) {
+				Console.warn(Level.HIGH, ioe.getMessage());
+			}
 
-				try {
-					this.client.close();
-				} catch (IOException ioe) {
-					Console.warn(Level.HIGH, ioe.getMessage());
-				}
+			try {
+				this.client.close();
+			} catch (IOException ioe) {
+				Console.warn(Level.HIGH, ioe.getMessage());
+			}
 
-				this.notify(this);
+			this.notifyObservers();
 
-				this.pause();
-			} else {
-				try {
-					Thread.sleep(this.pausePeriod);
-				} catch (InterruptedException ie) {
-					Console.warn(Level.HIGH, ie.getMessage());
+			synchronized (this.manager()) {
+				while (this.client.isClosed()) {
+					try {
+						this.manager().wait();
+					} catch (InterruptedException e) {
+						Console.warn(Level.HIGH, e.getMessage());
+					}
 				}
 			}
 		}
@@ -89,11 +76,20 @@ public abstract class Responder extends Poolable implements Runnable {
 		if (!(args[0] instanceof Socket)) {
 			throw new IllegalArgumentException();
 		} else {
-			this.client = (Socket) args[0];
-			this.resume();
+			synchronized (this.manager()) {
+				this.client = (Socket) args[0];
+				this.manager().notify();
+			}
 		}
 	}
 
+	/**
+	 * Return the response of the current responder to the specified request.
+	 * 
+	 * @param request
+	 *            The request to which the current responder needs to respond.
+	 * @return The response of the current responder.
+	 */
 	protected abstract byte[] response(byte[] request);
 
 }

@@ -69,6 +69,12 @@ public abstract class PortListener extends Runner {
 		}
 	}
 
+	/**
+	 * Return the pool of responders from which the current port listener can
+	 * retrieve responders for incoming connections.
+	 * 
+	 * @return The pool of responders.
+	 */
 	protected abstract Pool<Responder> pool();
 
 }

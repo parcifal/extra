@@ -7,11 +7,17 @@ public abstract class Pool<T extends Poolable> implements Observer {
 	private Stack<Poolable> idle = new Stack<Poolable>();
 
 	public final Poolable get(Object... args) {
+		Poolable poolable = null;
+
 		if (this.idle.isEmpty()) {
-			return this.instantiate(args);
+			poolable = this.instantiate(args);
 		} else {
-			return this.idle.pop();
+			poolable = this.idle.pop();
+
+			poolable.initialise(args);
 		}
+
+		return poolable;
 	}
 
 	protected abstract T instantiate(Object... args);
