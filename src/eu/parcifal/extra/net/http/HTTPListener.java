@@ -3,18 +3,18 @@ package eu.parcifal.extra.net.http;
 import eu.parcifal.extra.logic.Pool;
 import eu.parcifal.extra.logic.Router;
 import eu.parcifal.extra.net.PortListener;
-import eu.parcifal.extra.net.Responder;
+import eu.parcifal.extra.net.Exchanger;
 
 public class HTTPListener extends PortListener {
 
 	private static final int DEFAULT_PORT = 80;
 
-	private HTTPResponderPool pool;
+	private HTTPExchangerPool pool;
 
 	public HTTPListener(int port, Router router) {
 		super(port);
 
-		this.pool = new HTTPResponderPool(router);
+		this.pool = new HTTPExchangerPool(router);
 	}
 
 	public HTTPListener(Router router) {
@@ -22,7 +22,7 @@ public class HTTPListener extends PortListener {
 	}
 
 	@Override
-	protected Pool<Responder> pool() {
+	protected Pool<Exchanger> pool() {
 		return this.pool;
 	}
 

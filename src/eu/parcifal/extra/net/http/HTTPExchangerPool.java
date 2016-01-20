@@ -4,22 +4,22 @@ import java.net.Socket;
 
 import eu.parcifal.extra.logic.Pool;
 import eu.parcifal.extra.logic.Router;
-import eu.parcifal.extra.net.Responder;
+import eu.parcifal.extra.net.Exchanger;
 
-public class HTTPResponderPool extends Pool<Responder> {
+public class HTTPExchangerPool extends Pool<Exchanger> {
 
 	private static Router ROUTER;
 
-	public HTTPResponderPool(Router router) {
+	public HTTPExchangerPool(Router router) {
 		ROUTER = router;
 	}
 
 	@Override
-	protected Responder instantiate(Object... args) {
+	protected Exchanger instantiate(Object... args) {
 		if (!(args[0] instanceof Socket)) {
 			throw new IllegalArgumentException();
 		} else {
-			Responder responder = new HTTPExchanger(ROUTER);
+			Exchanger responder = new HTTPExchanger(ROUTER);
 
 			responder.observe(this);
 			responder.initialise((Socket) args[0]);

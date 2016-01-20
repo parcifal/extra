@@ -7,7 +7,7 @@ public class Debug extends Printable {
 
 	private static final long serialVersionUID = -4581140992057274821L;
 
-	private final static String STRING_FORMAT = "[%1s]\t\tDEBUG\t%2s\t%3s";
+	private final static String STRING_FORMAT = "[%1$s]\t\tDEBUG\t%2$s\t%3$s";
 
 	private static final String TIME_FORMAT = "HH:mm:ss.SSS";
 

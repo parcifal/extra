@@ -12,7 +12,7 @@ import eu.parcifal.extra.print.output.Warning.Level;
  * 
  * @author Michaël van de Weerd
  */
-public abstract class Responder extends Poolable implements Runnable {
+public abstract class Exchanger extends Poolable implements Runnable {
 
 	private Socket client;
 

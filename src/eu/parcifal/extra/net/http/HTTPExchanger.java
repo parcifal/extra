@@ -3,12 +3,10 @@ package eu.parcifal.extra.net.http;
 import java.io.UnsupportedEncodingException;
 
 import eu.parcifal.extra.logic.Router;
-import eu.parcifal.extra.net.Responder;
-import eu.parcifal.extra.print.Console;
-import eu.parcifal.extra.print.output.Warning.Level;
+import eu.parcifal.extra.net.Exchanger;
 import eu.parcifal.extra.throwing.RouteNotFoundException;
 
-public class HTTPExchanger extends Responder {
+public class HTTPExchanger extends Exchanger {
 
 	private Router router;
 
@@ -29,7 +27,7 @@ public class HTTPExchanger extends Responder {
 		} catch (RouteNotFoundException rne) {
 			return new HTTPResponse(HTTPResponse.STATUS_404).toBytes();
 		} catch (Exception e) {
-			Console.warn(Level.HIGH, e.getMessage());
+			e.printStackTrace();
 
 			return new HTTPResponse(HTTPResponse.STATUS_500).toBytes();
 		}

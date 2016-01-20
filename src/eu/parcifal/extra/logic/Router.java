@@ -11,7 +11,7 @@ public class Router {
 	/**
 	 * The message to be used in the case of a route not found exception.
 	 */
-	private final static String MESSAGE_ROUTE_NOT_FOUND = "no route matching path \"%1s\" has been found";
+	private final static String MESSAGE_ROUTE_NOT_FOUND = "no route matching path \"%1$s\" has been found";
 
 	/**
 	 * The routes of the current router.
@@ -43,7 +43,7 @@ public class Router {
 	public Object route(String path, Object... data) throws RouteNotFoundException {
 		for (Route route : this.routes) {
 			if (route.follows(path)) {
-				return route.follow();
+				return route.follow(data);
 			}
 		}
 

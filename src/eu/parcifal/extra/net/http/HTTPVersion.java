@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class HTTPVersion {
 
-	private final static String STRING_FORMAT = "HTTP/%1s.%2s";
+	private final static String STRING_FORMAT = "HTTP/%1$s.%2$s";
 
 	private int major;
 

@@ -4,7 +4,7 @@ public class MethodNotImplementedException extends RuntimeException {
 
 	private static final long serialVersionUID = -8994751165761895729L;
 
-	private final static String STRING_FORMAT = "%1s has no implementation";
+	private final static String STRING_FORMAT = "%1$s has no implementation";
 
 	public MethodNotImplementedException() {
 		super();

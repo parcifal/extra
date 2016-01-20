@@ -7,7 +7,7 @@ public class Log extends Printable {
 
 	private static final long serialVersionUID = -8779120534402398603L;
 
-	private final static String FORMAT = "[%1s]\t\tLOG\t%2s\t%3s";
+	private final static String FORMAT = "[%1$s]\t\tLOG\t%2$s\t%3$s";
 
 	private static final String TIME_FORMAT = "HH:mm:ss.SSS";
 

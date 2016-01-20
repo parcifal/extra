@@ -15,7 +15,7 @@ import eu.parcifal.extra.thread.Runner;
  * @author Michaël van de Weerd
  */
 public abstract class PortListener extends Runner {
-	private static final String DEBUG_LISTEN_INIT = "listening for requests on port %1s";
+	private static final String DEBUG_LISTEN_INIT = "listening for requests on port %1$s";
 
 	/**
 	 * The port at which the current port listener is listening.
@@ -75,6 +75,6 @@ public abstract class PortListener extends Runner {
 	 * 
 	 * @return The pool of responders.
 	 */
-	protected abstract Pool<Responder> pool();
+	protected abstract Pool<Exchanger> pool();
 
 }

@@ -4,11 +4,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import eu.parcifal.extra.net.URI;
-import eu.parcifal.extra.print.Console;
 
 public class HTTPRequest extends HTTPExchange {
 
 	private final static String PATTERN_REQUEST = "^(OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT) ((?:[A-Za-z\\d:/?#\\[\\]@!$&'\\(\\)*+,;=\\-._~]|%[0-9A-Fa-f]{2})*) (HTTP\\/[\\d]\\.[\\d])$";
+
+	private final static String PATTERN_HEADER = "^([^:\\s]+): (.+)$";
 
 	private Method method;
 	private URI uri;
@@ -39,8 +40,6 @@ public class HTTPRequest extends HTTPExchange {
 	}
 
 	public static HTTPRequest parse(String httpRequest) {
-		Console.log(httpRequest);
-
 		Pattern pattern = Pattern.compile(PATTERN_REQUEST, Pattern.MULTILINE);
 		Matcher matcher = pattern.matcher(httpRequest);
 
@@ -49,7 +48,16 @@ public class HTTPRequest extends HTTPExchange {
 			URI uri = new URI(matcher.group(2));
 			HTTPVersion version = HTTPVersion.parse(matcher.group(3));
 
-			return new HTTPRequest(method, uri, version, httpRequest);
+			HTTPRequest request = new HTTPRequest(method, uri, version, httpRequest);
+
+			Pattern patternHeader = Pattern.compile(PATTERN_HEADER, Pattern.MULTILINE);
+			Matcher matcherHeader = patternHeader.matcher(httpRequest);
+
+			while (matcherHeader.find()) {
+				request.header(matcherHeader.group(1), matcherHeader.group(2));
+			}
+
+			return request;
 		} else {
 			throw new IllegalArgumentException();
 		}

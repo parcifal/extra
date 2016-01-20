@@ -28,4 +28,16 @@ public class HTTPExchange {
 
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		String exchange = "";
+
+		for (HTTPHeader header : this.headers) {
+			exchange += header.toString() + "\n";
+		}
+
+		return exchange;
+	}
+
 }

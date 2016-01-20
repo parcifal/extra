@@ -2,7 +2,7 @@ package eu.parcifal.extra.net.http;
 
 public class HTTPHeader {
 
-	private final static String STRING_FORMAT = "%1s: %2s";
+	private final static String STRING_FORMAT = "%1$s: %2$s";
 
 	private String name;
 	private String value;

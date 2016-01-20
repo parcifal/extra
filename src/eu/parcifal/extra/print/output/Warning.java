@@ -7,7 +7,7 @@ public class Warning extends Printable {
 
 	private static final long serialVersionUID = 7850251421780052796L;
 
-	private final static String STRING_FORMAT = "[%1s]\t%2s\tWARNING\t%3s\t%4s";
+	private final static String STRING_FORMAT = "[%1$s]\t%2$s\tWARNING\t%3$s\t%4$s";
 
 	private static final String TIME_FORMAT = "HH:mm:ss.SSS";
 
