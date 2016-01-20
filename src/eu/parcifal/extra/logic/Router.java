@@ -29,8 +29,7 @@ public class Router {
 	}
 
 	/**
-	 * Attempt to find a route matching the specified path. Multiple routes can
-	 * be followed if there are multiple matches.
+	 * Attempt to find a route matching the specified path.
 	 * 
 	 * @param path
 	 *            The path to be attempted to follow.
@@ -41,16 +40,14 @@ public class Router {
 	 *             If no route matching the URI path in the specified HTTP
 	 *             exchange has been found.
 	 */
-	public void route(String path, Object... data) throws RouteNotFoundException {
-		boolean succes = false;
-
+	public Object route(String path, Object... data) throws RouteNotFoundException {
 		for (Route route : this.routes) {
-			succes = succes || route.attempt(path, data);
+			if (route.follows(path)) {
+				return route.follow();
+			}
 		}
 
-		if (!succes) {
-			throw new RouteNotFoundException(String.format(MESSAGE_ROUTE_NOT_FOUND, path), path);
-		}
+		throw new RouteNotFoundException(String.format(MESSAGE_ROUTE_NOT_FOUND, path), path);
 	}
 
 }

@@ -7,7 +7,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		Console.debug(true);
-		new Thread(new HTTPListener()).start();
+		new Thread(new HTTPListener(null)).start();
 	}
 
 }

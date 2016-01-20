@@ -95,14 +95,8 @@ public class Route {
 	 * @return True if the specified path matches at least one of the cases of
 	 *         the current route, otherwise false.
 	 */
-	public boolean attempt(String path, Object... data) {
-		boolean match = this.follows(path);
-
-		if (match) {
-			this.handler.execute(data);
-		}
-
-		return match;
+	public Object follow(Object... data) {
+		return this.handler.execute(data);
 	}
 
 }

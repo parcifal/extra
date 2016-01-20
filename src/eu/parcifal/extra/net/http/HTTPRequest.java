@@ -6,20 +6,20 @@ import java.util.regex.Pattern;
 import eu.parcifal.extra.net.URI;
 import eu.parcifal.extra.print.Console;
 
-public class HTTPRequest {
+public class HTTPRequest extends HTTPExchange {
 
 	private final static String PATTERN_REQUEST = "^(OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT) ((?:[A-Za-z\\d:/?#\\[\\]@!$&'\\(\\)*+,;=\\-._~]|%[0-9A-Fa-f]{2})*) (HTTP\\/[\\d]\\.[\\d])$";
-
-	private final static String STRING_FORMAT = "%1s %2s %3s";
 
 	private Method method;
 	private URI uri;
 	private HTTPVersion version;
+	private String raw;
 
-	public HTTPRequest(Method method, URI uri, HTTPVersion version) {
+	public HTTPRequest(Method method, URI uri, HTTPVersion version, String raw) {
 		this.method = method;
 		this.uri = uri;
 		this.version = version;
+		this.raw = raw;
 	}
 
 	public final Method method() {
@@ -34,14 +34,13 @@ public class HTTPRequest {
 		return this.version;
 	}
 
-	@Override
-	public String toString() {
-		return String.format(STRING_FORMAT, this.method, this.uri, this.version);
+	public final String raw() {
+		return this.raw;
 	}
 
 	public static HTTPRequest parse(String httpRequest) {
 		Console.log(httpRequest);
-		
+
 		Pattern pattern = Pattern.compile(PATTERN_REQUEST, Pattern.MULTILINE);
 		Matcher matcher = pattern.matcher(httpRequest);
 
@@ -50,7 +49,7 @@ public class HTTPRequest {
 			URI uri = new URI(matcher.group(2));
 			HTTPVersion version = HTTPVersion.parse(matcher.group(3));
 
-			return new HTTPRequest(method, uri, version);
+			return new HTTPRequest(method, uri, version, httpRequest);
 		} else {
 			throw new IllegalArgumentException();
 		}
