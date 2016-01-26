@@ -7,7 +7,7 @@ import eu.parcifal.extra.net.URI;
 
 public class HTTPRequest extends HTTPExchange {
 
-	private final static String PATTERN_REQUEST = "^(OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT) ((?:[A-Za-z\\d:/?#\\[\\]@!$&'\\(\\)*+,;=\\-._~]|%[0-9A-Fa-f]{2})*) (HTTP\\/[\\d]\\.[\\d])$";
+	private final static String PATTERN_REQUEST = "^(OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT) ((?:[0-9A-Za-z:/?#\\[\\]@!$&'\\(\\)*+,;=\\-._~]|%[0-9A-Fa-f]{2})*) (HTTP\\/[0-9]\\.[0-9])$";
 
 	private final static String PATTERN_HEADER = "^([^:\\s]+): (.+)$";
 

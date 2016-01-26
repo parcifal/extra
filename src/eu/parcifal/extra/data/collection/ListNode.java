@@ -2,6 +2,9 @@ package eu.parcifal.extra.data.collection;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * A list node contains a single object as its content and a list of other nodes
@@ -12,7 +15,7 @@ import java.util.Collection;
  * @param <T>
  *            The type of the content object, contained within each list node.
  */
-public class ListNode<T> extends ArrayList<ListNode<T>> {
+public class ListNode<T> extends ArrayList<ListNode<T>> implements Node {
 	/**
 	 * The serial version unique identifier.
 	 */
@@ -52,69 +55,9 @@ public class ListNode<T> extends ArrayList<ListNode<T>> {
 		return this.content;
 	}
 
-	/**
-	 * Return whether or not the content of the current node or the content of
-	 * any of its children is equal to the specified object.
-	 * 
-	 * @param o
-	 *            The object to which the content of the current node or the
-	 *            content of its children is compared using the equals(Object)
-	 *            method.
-	 * @return True if the content of the current node of the content of any of
-	 *         its children is equal to the specified object, otherwise false.
-	 */
 	@Override
-	public boolean contains(Object o) {
-		if (this.content.equals(o))
-			return true;
-
-		for (ListNode<T> child : this)
-			if (child.contains(o))
-				return true;
-
-		return false;
-	}
-
-	/**
-	 * Return whether or not every object in the specified collection is the
-	 * content of the current node or the content of any of its children.
-	 * 
-	 * @param c
-	 *            The collection containing objects to which the content of the
-	 *            current node or the content of its children is compared using
-	 *            the equals(Object) method.
-	 * @return True if every object in the specified collection is the content
-	 *         of the current node or the content of any of its children,
-	 *         otherwise false.
-	 */
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		for (Object o : c)
-			if (!this.contains(o))
-				return false;
-
-		return true;
-	}
-
-	@Override
-	public boolean remove(Object o) {
-		for (ListNode<T> child : this)
-			if (child.equals(o))
-				return super.remove(child);
-			else if (child.remove(o))
-				return true;
-
-		return false;
-	}
-
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		boolean changed = false;
-
-		for (ListNode<T> child : this)
-			changed &= remove(child);
-
-		return changed;
+	public Collection<Node> children() {
+		return (Collection<Node>) super.clone();
 	}
 
 	@Override

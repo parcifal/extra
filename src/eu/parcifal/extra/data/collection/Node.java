@@ -17,7 +17,7 @@ public interface Node {
 	public default int height() {
 		int height = 0;
 
-		for (Node child : this.getChildren()) {
+		for (Node child : this.children()) {
 			if (child.height() > height) {
 				height = child.height();
 			}
@@ -32,7 +32,7 @@ public interface Node {
 	 * @return The degree of the current node.
 	 */
 	public default int degree() {
-		return this.getChildren().size();
+		return this.children().size();
 	}
 
 	/**
@@ -42,7 +42,7 @@ public interface Node {
 	 * @return True if the current node is a leaf, otherwise false.
 	 */
 	public default boolean isLeaf() {
-		return this.getChildren().isEmpty();
+		return this.children().isEmpty();
 	}
 
 	/**
@@ -50,6 +50,6 @@ public interface Node {
 	 * 
 	 * @return A collection of child nodes of the current node.
 	 */
-	public Collection<Node> getChildren();
+	public Collection<Node> children();
 
 }

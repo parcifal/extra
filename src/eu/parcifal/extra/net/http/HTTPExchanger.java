@@ -19,9 +19,20 @@ public class HTTPExchanger extends Exchanger {
 		try {
 			HTTPRequest httpRequest = HTTPRequest.parse(new String(request, "UTF-8"));
 
-			HTTPResponse httpResponse = (HTTPResponse) router.route(httpRequest.header("Host").value(), httpRequest);
+			HTTPResponse httpResponse;
 
-			return httpResponse.toBytes();
+			switch (httpRequest.method()) {
+			case GET:
+				httpResponse = (HTTPResponse) router.route(httpRequest.header("Host").value(), httpRequest);
+				
+				return httpResponse.toBytes();
+			case HEAD:
+				httpResponse = (HTTPResponse) router.route(httpRequest.header("Host").value(), httpRequest);
+
+				return httpResponse.toBytes();
+			default:
+				return new HTTPResponse(HTTPResponse.STATUS_405).toBytes();
+			}
 		} catch (UnsupportedEncodingException | IllegalArgumentException e) {
 			return new HTTPResponse(HTTPResponse.STATUS_400).toBytes();
 		} catch (RouteNotFoundException rne) {

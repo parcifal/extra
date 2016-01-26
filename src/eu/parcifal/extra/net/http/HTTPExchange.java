@@ -26,18 +26,26 @@ public class HTTPExchange {
 			}
 		}
 
-		return null;
+		throw new IllegalArgumentException();
+	}
+
+	public String headers() {
+		String headers = "";
+
+		for (HTTPHeader header : this.headers) {
+			headers += header.toString() + "\n";
+		}
+
+		return headers;
+	}
+
+	public byte[] toBytes() {
+		return this.toString().getBytes();
 	}
 
 	@Override
 	public String toString() {
-		String exchange = "";
-
-		for (HTTPHeader header : this.headers) {
-			exchange += header.toString() + "\n";
-		}
-
-		return exchange;
+		return this.headers();
 	}
 
 }

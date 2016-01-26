@@ -2,7 +2,8 @@ package eu.parcifal.extra.net.http;
 
 public class HTTPResponse extends HTTPExchange {
 
-	private final static String FORMAT_STATUS_LINE = "%1$s %2$s\n%3$s\n%4$s";
+	private final static String FORMAT_STRING_HEADER = "%1$s %2$s\n%3$s";
+	private final static String FORMAT_STRING_BODY = "%1$s\n%2$s";
 
 	private final static HTTPVersion DEFAULT_VERSION = new HTTPVersion(1, 1);
 
@@ -55,7 +56,7 @@ public class HTTPResponse extends HTTPExchange {
 
 	private HTTPStatus status;
 
-	private String body;
+	private String body = "";
 
 	public HTTPResponse(HTTPVersion version, HTTPStatus status) {
 		this.version = version;
@@ -71,13 +72,18 @@ public class HTTPResponse extends HTTPExchange {
 		this.header("Content-Length", String.valueOf(body.length()));
 	}
 
-	public byte[] toBytes() {
-		return this.toString().getBytes();
+	@Override
+	public String headers() {
+		return String.format(FORMAT_STRING_HEADER, this.version, this.status, super.headers());
+	}
+
+	public String body() {
+		return String.format(FORMAT_STRING_BODY, this.headers(), this.body);
 	}
 
 	@Override
 	public String toString() {
-		return String.format(FORMAT_STATUS_LINE, this.version, this.status, super.toString(), this.body);
+		return this.body();
 	}
 
 }
