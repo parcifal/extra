@@ -2,9 +2,6 @@ package eu.parcifal.plus.data.collection;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 /**
  * A list node contains a single object as its content and a list of other nodes
