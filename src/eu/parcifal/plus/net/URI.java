@@ -1,5 +1,7 @@
 package eu.parcifal.plus.net;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -84,6 +86,34 @@ public class URI {
 		return this.fragment;
 	}
 
+	public void scheme(String scheme) {
+		this.scheme = scheme;
+	}
+
+	public void userinfo(String userinfo) {
+		this.userinfo = userinfo;
+	}
+
+	public void host(String host) {
+		this.host = host;
+	}
+
+	public void port(int port) {
+		this.port = port;
+	}
+
+	public void path(String path) {
+		this.path = path;
+	}
+
+	public void query(String query) {
+		this.query = query;
+	}
+
+	public void fragment(String fragment) {
+		this.fragment = fragment;
+	}
+
 	public static URI fromString(String raw) {
 		Pattern pattern = Pattern.compile(
 				"^(?:([a-zA-Z][a-zA-Z0-9+\\-.]*):)?(?:\\/{2}(?:((?:[a-zA-z0-9\\-._~]|(?:%[a-fA-F0-9]{2})|[!$&'()*+,;=]|:)*)@)?((?:[a-zA-Z0-9\\-._~]|(?:%[a-fA-F0-9]{2})|[!$&'()*+,;=])*)(:[0-9]*)?)?(?:((?:\\/(?:[a-zA-Z0-9\\-._~]|(?:%[a-fA-F0-9]{2})|[!$&'()*+,;=]|:|@)*)*))?(?:\\?((?:[a-zA-Z0-9\\-._~]|(?:%[a-fA-F0-9]{2})|[!$&'()*+,;=]|:|@|\\\\|\\?)*))?(?:#((?:[a-zA-Z0-9\\-._~]|(?:%[a-fA-F0-9]{2})|[!$&'()*+,;=]|:|@|\\\\|\\?)*))?");
@@ -129,6 +159,20 @@ public class URI {
 		}
 
 		return uri;
+	}
+
+	public Map<String, Object> toMap() {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("scheme", this.scheme);
+		map.put("userinfo", this.userinfo);
+		map.put("host", this.host);
+		map.put("port", this.port);
+		map.put("path", this.path);
+		map.put("query", this.query);
+		map.put("fragment", this.fragment);
+
+		return map;
 	}
 
 }

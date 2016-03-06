@@ -4,10 +4,10 @@ public abstract class Poolable extends Observable {
 
 	public abstract void initialise(Object... args);
 
-	private Object manager = new Object();
+	private Object monitor = new Object();
 
-	public Object manager() {
-		return this.manager;
+	public Object monitor() {
+		return this.monitor;
 	}
 
 }

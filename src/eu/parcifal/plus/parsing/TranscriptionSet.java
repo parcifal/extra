@@ -19,7 +19,7 @@ public class TranscriptionSet {
 	}
 
 	private void initialise() {
-		Pattern pattern = Pattern.compile("\\s*((?:[^:]|(?<=\\\\):)+)\\s*:\\s*\"((?:[^\"]|(?<=\\\\)\")*)\"");
+		Pattern pattern = Pattern.compile("([^:\\s]*)\\s*:\\s*\"([^\"]*)\"");
 		Matcher matcher = pattern.matcher(this.raw);
 
 		this.transcriptions = new ArrayList<Transcription>();

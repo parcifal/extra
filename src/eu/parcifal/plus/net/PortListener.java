@@ -16,7 +16,7 @@ import eu.parcifal.plus.thread.Runner;
  */
 public abstract class PortListener extends Runner {
 	private static final String MESSAGE_LISTEN_INIT = "started listening for requests on port %1$s";
-	
+
 	private static final String MESSAGE_LISTEN_FIN = "stopped listening for requests on port %1$s";
 
 	/**
@@ -66,7 +66,7 @@ public abstract class PortListener extends Runner {
 	protected final void finalise() {
 		try {
 			this.socket.close();
-			
+
 			Console.log(MESSAGE_LISTEN_FIN, this.port);
 		} catch (IOException ioe) {
 			Console.warn(Level.HIGH, ioe.getMessage());

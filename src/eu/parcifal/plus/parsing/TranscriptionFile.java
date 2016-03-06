@@ -1,8 +1,9 @@
 package eu.parcifal.plus.parsing;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Matcher;
@@ -24,10 +25,18 @@ public class TranscriptionFile extends File {
 
 	private void initialise() {
 		if (this.exists()) {
-			try {
-				this.raw = new String(Files.readAllBytes(this.toPath()), "UTF-8");
+			InputStream stream = null;
 
-				Pattern pattern = Pattern.compile("([0-9a-zA-Z_\\-#.]+)\\s*\\{((?:[^\\}]|(?<=\\\\)\\})*)\\}");
+			try {
+				byte[] content = new byte[(int) this.length()];
+
+				stream = new FileInputStream(this);
+
+				stream.read(content);
+
+				this.raw = new String(content);
+
+				Pattern pattern = Pattern.compile("([^\\{\\s]*)\\s*\\{\\r?\\n((?:[^:\\r\\n]*: \"[^\"]*\"\\r?\\n)*)\\}");
 				Matcher matcher = pattern.matcher(this.raw);
 
 				this.transcriptionSets = new ArrayList<TranscriptionSet>();

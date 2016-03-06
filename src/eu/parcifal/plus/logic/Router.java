@@ -1,11 +1,17 @@
 package eu.parcifal.plus.logic;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * Contains and handles one or more routes.
  * 
  * @author Michaël van de Weerd
  */
 public class Router {
+	
+	public final static Router EMPTY = new Router();
+	
 	/**
 	 * The message to be used in the case of a route not found exception.
 	 */
@@ -14,7 +20,7 @@ public class Router {
 	/**
 	 * The routes of the current router.
 	 */
-	private Route[] routes;
+	private Collection<Route> routes = new ArrayList<Route>();
 
 	/**
 	 * Construct a routes containing one or more routes.
@@ -24,7 +30,13 @@ public class Router {
 	 */
 	@SafeVarargs
 	public Router(Route... routes) {
-		this.routes = routes;
+		for(Route route : routes) {
+			this.routes.add(route);
+		}
+	}
+	
+	public void add(Route route) {
+		this.routes.add(route);
 	}
 
 	/**

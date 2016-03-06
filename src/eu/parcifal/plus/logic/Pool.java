@@ -4,14 +4,14 @@ import java.util.Stack;
 
 public abstract class Pool<T extends Poolable> implements Observer {
 
-	private Stack<Poolable> idle = new Stack<Poolable>();
+	private final Stack<Poolable> idle = new Stack<Poolable>();
 
 	public final Poolable get(Object... args) {
 		Poolable poolable = null;
 
-		if (this.idle.isEmpty()) {
+		if (this.idle.isEmpty()) {			
 			poolable = this.instantiate(args);
-		} else {
+		} else {			
 			poolable = this.idle.pop();
 
 			poolable.initialise(args);

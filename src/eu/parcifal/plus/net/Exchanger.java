@@ -16,6 +16,8 @@ public abstract class Exchanger extends Poolable implements Runnable {
 
 	private static final String MESSAGE_HANDLING = "handling request from client at %1$s";
 
+	private static final int REQUEST_BUFFER_SIZE = 8192;
+
 	private Socket client;
 
 	private int runCycle;
@@ -44,7 +46,7 @@ public abstract class Exchanger extends Poolable implements Runnable {
 			try {
 				Console.log(MESSAGE_HANDLING, client.getInetAddress());
 
-				byte[] request = new byte[8192];
+				byte[] request = new byte[REQUEST_BUFFER_SIZE];
 
 				client.getInputStream().read(request);
 
@@ -56,33 +58,34 @@ public abstract class Exchanger extends Poolable implements Runnable {
 			} finally {
 				try {
 					this.client.close();
+					this.client = null;
 				} catch (IOException ioe) {
 					Console.warn(Level.HIGH, ioe.getMessage());
 				}
 			}
 
-			synchronized (this.manager()) {
-				while (this.client.isClosed()) {
+			this.notifyObservers();
+
+			synchronized (this.monitor()) {
+				while (this.client == null || this.client.isClosed()) {
 					try {
-						this.manager().wait();
+						this.monitor().wait();
 					} catch (InterruptedException e) {
 						Console.warn(Level.HIGH, e.getMessage());
 					}
 				}
 			}
-
-			this.notifyObservers();
 		}
 	}
 
 	@Override
 	public void initialise(Object... args) {
-		if (!(args[0] instanceof Socket)) {
+		if (args.length < 1 || !(args[0] instanceof Socket)) {
 			throw new IllegalArgumentException();
 		} else {
-			synchronized (this.manager()) {
+			synchronized (this.monitor()) {
 				this.client = (Socket) args[0];
-				this.manager().notify();
+				this.monitor().notify();
 			}
 		}
 	}
