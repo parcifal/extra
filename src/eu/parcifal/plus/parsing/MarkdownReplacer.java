@@ -3,7 +3,7 @@ package eu.parcifal.plus.parsing;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MarkdownParser implements Replacer {
+public class MarkdownReplacer implements Replacer {
 
 	public final static int DISABLE_HEADING_1 = 1;
 	public final static int DISABLE_HEADING_2 = 1 << 1;
