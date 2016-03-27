@@ -2,12 +2,15 @@ package eu.parcifal.plus.print.output;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Log extends Printable {
 
 	private static final long serialVersionUID = -8779120534402398603L;
 
-	private final static String FORMAT = "[%1$s]\t\tLOG\t%2$s\t%3$s";
+	private final static String PRINT_FORMAT = "LOG     [%1$s] %2$s%3$s";
+	private final static String LINE_FORMAT = "\r\n : %1$s";
 
 	private static final String TIME_FORMAT = "HH:mm:ss.SSS";
 
@@ -23,9 +26,16 @@ public class Log extends Printable {
 	public void print(boolean debug) {
 		String time = this.time.format(DateTimeFormatter.ofPattern(TIME_FORMAT));
 		String source = this.source.toString();
-		String content = this.content.toString();
+		String content = "";
 
-		System.out.println(String.format(FORMAT, time, source, content));
+		Pattern pattern = Pattern.compile("^(.*)$", Pattern.MULTILINE);
+		Matcher matcher = pattern.matcher(this.content.toString());
+
+		while (matcher.find()) {
+			content += String.format(LINE_FORMAT, matcher.group(1));
+		}
+
+		System.out.println(String.format(PRINT_FORMAT, time, source, content));
 	}
 
 	@Override

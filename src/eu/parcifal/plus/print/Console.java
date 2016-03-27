@@ -39,12 +39,8 @@ public class Console {
 		print(new Debug(String.format(content, args)));
 	}
 
-	public static void warn(Warning.Level level, Object content) {
-		print(new Warning(content, level));
-	}
-
-	public static void warn(Warning.Level level, Object content, Object... args) {
-		print(new Warning(String.format(content.toString(), args), level));
+	public static void warn(Exception exception) {
+		print(new Warning(exception));
 	}
 
 	private static void print(Printable printable) {
