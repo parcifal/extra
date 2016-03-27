@@ -1,7 +1,6 @@
 package eu.parcifal.plus.thread;
 
 import eu.parcifal.plus.print.Console;
-import eu.parcifal.plus.print.output.Warning.Level;
 
 /**
  * Call the intervalAct() method at an interval in a thread.
@@ -49,11 +48,11 @@ public abstract class IntervalRunner extends Runner {
 		if (sleep >= 0) {
 			try {
 				Thread.sleep(sleep);
-			} catch (InterruptedException ie) {
-				Console.warn(Level.HIGH, ie.getMessage());
+			} catch (InterruptedException exception) {
+				Console.warn(exception);
 			}
 		} else {
-			Console.warn(Level.LOW, WARNING_OVERTIME, sleep, this.actPeriod);
+			Console.log(WARNING_OVERTIME, sleep, this.actPeriod);
 		}
 	}
 

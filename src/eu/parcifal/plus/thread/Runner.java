@@ -2,7 +2,6 @@ package eu.parcifal.plus.thread;
 
 import eu.parcifal.plus.MethodNotImplementedException;
 import eu.parcifal.plus.print.Console;
-import eu.parcifal.plus.print.output.Warning.Level;
 
 /**
  * A partial implementation of the runnable interface, providing three methods
@@ -119,8 +118,8 @@ public abstract class Runner implements Runnable {
 
 		try {
 			this.initialise();
-		} catch (MethodNotImplementedException mnie) {
-			Console.debug(mnie.getMessage());
+		} catch (MethodNotImplementedException exception) {
+			Console.debug(exception.getMessage());
 		}
 
 		while (this.running) {
@@ -131,8 +130,8 @@ public abstract class Runner implements Runnable {
 			} else {
 				try {
 					Thread.sleep(pausePeriod);
-				} catch (InterruptedException ie) {
-					Console.warn(Level.HIGH, ie.getMessage());
+				} catch (InterruptedException exception) {
+					Console.warn(exception);
 				}
 			}
 		}
