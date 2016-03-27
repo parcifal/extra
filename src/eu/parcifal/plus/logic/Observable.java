@@ -13,7 +13,7 @@ public abstract class Observable {
 
 	protected final void notifyObservers(Object... args) {
 		for (Observer observer : this.observers) {
-			observer.notify(this, args);
+			observer.observe(this, args);
 		}
 	}
 

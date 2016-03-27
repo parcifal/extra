@@ -3,6 +3,8 @@ package eu.parcifal.plus.logic;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import eu.parcifal.plus.print.Console;
+
 /**
  * A route contains several cases against which a string of data can be tested.
  * When a match occurs a handler associated with the route can be executed.

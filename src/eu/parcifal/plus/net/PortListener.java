@@ -5,7 +5,6 @@ import java.net.ServerSocket;
 
 import eu.parcifal.plus.logic.Pool;
 import eu.parcifal.plus.print.Console;
-import eu.parcifal.plus.print.output.Warning.Level;
 import eu.parcifal.plus.thread.Runner;
 
 /**
@@ -46,8 +45,8 @@ public abstract class PortListener extends Runner {
 			this.socket = new ServerSocket(this.port);
 
 			Console.log(MESSAGE_LISTEN_INIT, this.port);
-		} catch (IOException ioe) {
-			Console.warn(Level.FATAL, ioe.getMessage());
+		} catch (IOException exception) {
+			Console.warn(exception);
 
 			this.stop();
 		}
@@ -56,9 +55,9 @@ public abstract class PortListener extends Runner {
 	@Override
 	protected final void act() {
 		try {
-			this.pool().get(this.socket.accept());
-		} catch (IOException ioe) {
-			Console.warn(Level.HIGH, ioe.getMessage());
+			this.pool().task(this.socket.accept());
+		} catch (IOException exception) {
+			Console.warn(exception);
 		}
 	}
 
@@ -68,8 +67,8 @@ public abstract class PortListener extends Runner {
 			this.socket.close();
 
 			Console.log(MESSAGE_LISTEN_FIN, this.port);
-		} catch (IOException ioe) {
-			Console.warn(Level.HIGH, ioe.getMessage());
+		} catch (IOException exception) {
+			Console.warn(exception);
 		}
 	}
 
@@ -79,6 +78,6 @@ public abstract class PortListener extends Runner {
 	 * 
 	 * @return The pool of responders.
 	 */
-	protected abstract Pool<Exchanger> pool();
+	protected abstract Pool pool();
 
 }

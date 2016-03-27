@@ -1,34 +1,64 @@
 package eu.parcifal.plus.logic;
 
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Stack;
 
-public abstract class Pool<T extends Poolable> implements Observer {
+public abstract class Pool implements Observer {
 
-	private final Stack<Poolable> idle = new Stack<Poolable>();
+	private final static int DEFAULT_MINIMUM = 8;
 
-	public final Poolable get(Object... args) {
-		Poolable poolable = null;
+	private Stack<Poolable> idle = new Stack<Poolable>();
 
-		if (this.idle.isEmpty()) {			
-			poolable = this.instantiate(args);
-		} else {			
-			poolable = this.idle.pop();
+	private Queue<Object[]> tasks = new PriorityQueue<Object[]>();
 
-			poolable.initialise(args);
-		}
+	private int minimum;
 
-		return poolable;
+	public Pool() {
+		this(DEFAULT_MINIMUM);
 	}
 
-	protected abstract T instantiate(Object... args);
+	public Pool(int minimum) {
+		this.minimum = minimum;
+		this.initialise();
+	}
+
+	private void initialise() {
+		for (int i = 0; i < this.minimum; i++) {
+			Poolable poolable = this.instantiate();
+
+			poolable.observe(this);
+
+			this.idle.push(poolable);
+		}
+	}
+
+	private void process() {
+		while (!this.tasks.isEmpty() && !this.idle.isEmpty()) {
+			Poolable poolable = this.idle.pop();
+
+			synchronized (poolable.monitor()) {
+				poolable.initialise(this.tasks.remove());
+				poolable.monitor().notify();
+			}
+		}
+	}
+
+	public void task(Object... arguments) {
+		this.tasks.add(arguments);
+
+		this.process();
+	}
 
 	@Override
-	public final void notify(Observable source, Object... args) {
-		if (!(source instanceof Poolable)) {
-			throw new IllegalArgumentException();
-		} else {
+	public void observe(Observable source, Object... arguments) {
+		if (source instanceof Poolable) {
 			this.idle.push((Poolable) source);
 		}
+
+		this.process();
 	}
+
+	protected abstract Poolable instantiate(Object... args);
 
 }

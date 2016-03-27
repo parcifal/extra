@@ -5,7 +5,6 @@ import java.net.Socket;
 
 import eu.parcifal.plus.logic.Poolable;
 import eu.parcifal.plus.print.Console;
-import eu.parcifal.plus.print.output.Warning.Level;
 
 /**
  * Provides a response to a request made via a socket.
@@ -14,7 +13,7 @@ import eu.parcifal.plus.print.output.Warning.Level;
  */
 public abstract class Exchanger extends Poolable implements Runnable {
 
-	private static final String MESSAGE_HANDLING = "handling request from client at %1$s";
+	private static final String MESSAGE_HANDLING = "handling request from client at %1$s:%2$d on port %3$d";
 
 	private static final int REQUEST_BUFFER_SIZE = 8192;
 
@@ -42,9 +41,21 @@ public abstract class Exchanger extends Poolable implements Runnable {
 
 		while (this.running) {
 			this.runCycle++;
+			
+			if(this.client == null || this.client.isClosed()) {
+				synchronized (this.monitor()) {
+					this.notifyObservers();
+
+					try {
+						this.monitor().wait();
+					} catch (InterruptedException exception) {
+						Console.warn(exception);
+					}
+				}
+			}
 
 			try {
-				Console.log(MESSAGE_HANDLING, client.getInetAddress());
+				Console.log(MESSAGE_HANDLING, client.getInetAddress(), client.getPort(), client.getLocalPort());
 
 				byte[] request = new byte[REQUEST_BUFFER_SIZE];
 
@@ -53,26 +64,13 @@ public abstract class Exchanger extends Poolable implements Runnable {
 				byte[] response = this.response(request);
 
 				client.getOutputStream().write(response);
-			} catch (IOException ioe) {
-				Console.warn(Level.HIGH, ioe.getMessage());
+			} catch (IOException exception) {
+				Console.warn(exception);
 			} finally {
 				try {
 					this.client.close();
-					this.client = null;
-				} catch (IOException ioe) {
-					Console.warn(Level.HIGH, ioe.getMessage());
-				}
-			}
-
-			this.notifyObservers();
-
-			synchronized (this.monitor()) {
-				while (this.client == null || this.client.isClosed()) {
-					try {
-						this.monitor().wait();
-					} catch (InterruptedException e) {
-						Console.warn(Level.HIGH, e.getMessage());
-					}
+				} catch (IOException exception) {
+					Console.warn(exception);
 				}
 			}
 		}
@@ -83,10 +81,7 @@ public abstract class Exchanger extends Poolable implements Runnable {
 		if (args.length < 1 || !(args[0] instanceof Socket)) {
 			throw new IllegalArgumentException();
 		} else {
-			synchronized (this.monitor()) {
-				this.client = (Socket) args[0];
-				this.monitor().notify();
-			}
+			this.client = (Socket) args[0];
 		}
 	}
 
