@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * An implementation of the Uniform Resource Identifier (URI) format as defined
  * by The Internet Society.
  * 
- * @author Michaël van de Weerd
+ * @author MichaÃ«l van de Weerd
  * @see https://tools.ietf.org/html/rfc3986
  */
 public class URI {
